@@ -3,8 +3,8 @@
 import { CameraManager } from './src/managers/CameraManager.mjs';
 import { SceneManager } from './src/managers/SceneManager.mjs';
 import { LightManager } from './src/managers/LightManager.mjs';
-import { PlayerObject } from './src/entities/characterPlayer/PlayerObject.mjs';
-import { scene, camera, lightManager } from './managerScript.js';
+import { PlayerObject } from './src/managers/objectsmanager/PlayerObject.mjs';
+import { scene, camera, lightManager, sceneManager } from './managerScript.js';
 document.addEventListener('DOMContentLoaded', () => {
 // const sceneManager = new SceneManager();
 // const scene = sceneManager.getScene();

@@ -25,31 +25,32 @@ export class SceneManager {
     gridHelper.position.set(gridPosition.x, gridPosition.y, gridPosition.z);
     this.scene.add(gridHelper);
     this.gridHelper = gridHelper;
-
+  
     const axesHelper = new THREE.AxesHelper(axesSize);
     this.scene.add(axesHelper);
+    this.axesHelper = axesHelper; // Stocke une référence pour le toggle
     console.log('Grille et axes ajoutés.');
   }
-
+  
   toggleGrid() {
     console.log('this.gridHelper au moment de toggleGrid :', this.gridHelper);
     if (this.gridHelper) {
       if (this.scene.children.includes(this.gridHelper)) {
         this.scene.remove(this.gridHelper);
-        console.log('Grille désactivée.');
+        this.scene.remove(this.axesHelper); // Supprime les axes
+        console.log('Grille et axes désactivés.');
       } else {
         this.scene.add(this.gridHelper);
-        console.log('Grille activée.');
+        this.scene.add(this.axesHelper); // Réactive les axes
+        console.log('Grille et axes activés.');
       }
     } else {
       console.warn('Aucune grille n\'a été initialisée. Utilisez addHelpers() d\'abord.');
     }
   }
+  
 
-  // Méthode pour récupérer la scène
-  getScene() {
-    return this.scene;
-  }
+
 
   // Méthode pour charger une texture en tant que map de la scène
 
@@ -101,11 +102,40 @@ export class SceneManager {
     );
   }
 
-
   setBackground(color) {
     this.scene.background = new THREE.Color(color);
     console.log(`Fond changé : ${color.toString(16)}`);
   }
+
+  addSpriteToGrid(spritePath, cellId, cellSize = 10) {
+    // Vérifie si la grille contient cette cellule
+    const cellPosition = this.getCellPosition(cellId);
+    if (!cellPosition) {
+      console.error(`Cellule ${cellId} introuvable.`);
+      return;
+    }
+  
+    // Création d'un conteneur HTML pour le sprite
+    const spriteContainer = document.createElement('div');
+    spriteContainer.className = 'sprite';
+    spriteContainer.style.position = 'absolute';
+    spriteContainer.style.width = `${cellSize}px`;
+    spriteContainer.style.height = `${cellSize}px`;
+    spriteContainer.style.backgroundImage = `url(${spritePath})`;
+    spriteContainer.style.backgroundSize = 'contain';
+    spriteContainer.style.backgroundRepeat = 'no-repeat';
+    spriteContainer.style.transform = 'translate(-50%, -50%)';
+  
+    // Positionne le sprite selon les coordonnées de la cellule
+    spriteContainer.style.left = `${cellPosition.x}px`;
+    spriteContainer.style.top = `${cellPosition.z}px`;
+  
+    // Ajout au DOM
+    document.body.appendChild(spriteContainer);
+    console.log(`Sprite ajouté sur la cellule ${cellId}.`);
+  }
+  
+  
 
   // Récupérer l'instance de la scène
   getScene() {
