@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Boy Interface</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="gameboy">
+    <!-- Écran -->
+    <div class="screen">
+      <canvas id="gameCanvas"></canvas> <!-- Ajout du canvas -->
+    </div>
+
+    <!-- Croix directionnelle -->
+    <div class="dpad">
+      <button class="up">▲</button>
+      <button class="left">◄</button>
+      <button class="right">►</button>
+      <button class="down">▼</button>
+    </div>
+
+    <!-- Boutons A et B -->
+    <div class="buttons">
+      <button class="btn-a">A</button>
+      <button class="btn-b">B</button>
+    </div>
+
+    <!-- Boutons Select et Start -->
+    <div class="menu-buttons">
+      <button class="btn-select">Select</button>
+      <button class="btn-start">Start</button>
+    </div>
+  </div>
+</body>
+<script type="module" src="./managerScript.js"></script>
+</html>
