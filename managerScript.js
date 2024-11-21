@@ -3,25 +3,36 @@ import * as THREE from 'three';
 import { CameraManager } from './src/managers/CameraManager.mjs';
 import { SceneManager } from './src/managers/SceneManager.mjs';
 import { LightManager } from './src/managers/LightManager.mjs';
+import { PlayerObject } from './src/entities/characterPlayer/PlayerObject.mjs';
 
 // Création de la scène
 const sceneManager = new SceneManager();
 const scene = sceneManager.getScene();
-sceneManager.addHelpers()
-sceneManager.setRotation(Math.PI / 4, 0,0);
-sceneManager.addMap(100,100, "./src/assets/textures/map.jpg")
-// sceneManager.setSky("")
-sceneManager.setBackground("blue")
+sceneManager.addMap(50, 50, "./src/assets/textures/map.jpg");
+sceneManager.addHelpers(
+  20, // Taille de la grille
+  15, // Nombre de divisions
+  { color1: 0xff0000, color2: 0x00ff00 }, // Couleurs : rouge et vert
+  10, // Taille des axes
+  { x: 0, y: 0.5, z: 0 } // Position de la grille
+);
+// Vérification après ajout
+console.log('Grille initialisée :', sceneManager.gridHelper);
+sceneManager.setRotation(Math.PI / 4, 0, 0);
+sceneManager.setSky("./src/assets/textures/ciel.jpg") // Laisser à configurer plus tard
+sceneManager.setBackground("blue");
 
 // Initialisation des lumières (sans les activer immédiatement)
 const lightManager = new LightManager(scene);
+lightManager.addDirectionalLight(0xffffff, 1, { x: 10, y: 15, z: 5 });
+lightManager.addHemisphereLight()
 
 // Initialisation de la caméra
 const cameraManager = new CameraManager({
-  position: { x: 0, y: 0, z: 20 },fov:100
+  position: { x: 0, y: 0, z: 20 },
+  fov: 150,
 });
 const camera = cameraManager.getCamera();
-// camera.lookAt(0,0,0);
 
 // Récupérer le canvas
 const canvas = document.getElementById('gameCanvas');
@@ -30,25 +41,20 @@ const canvas = document.getElementById('gameCanvas');
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Gestionnaire pour le bouton Start
-const startButton = document.querySelector('.btn-start');
-startButton.addEventListener('click', () => {
-  lightManager.toggleLight(); // Active ou désactive les lumières
+// \\initialisation objet player 
+let playerObject = new PlayerObject({
+  name: "Héros",
+  health: 100,
+  rangeAttack: 15,
+  rangeMove: 5,
+  powerAttack: 20,
+  speed: 10,
+  spritePath: "./sprites/hero.gif", // Exemple de sprite
+  position: { x: 0, y: 0, z: 0 },
 });
 
-const selectButton = document.querySelector('.btn-select');
-selectButton.addEventListener('click', () => {
-  const targetObject = scene.getObjectByName('target'); // Rechercher un objet nommé "target"
-
-  if (targetObject) {
-    camera.lookAt(targetObject.position); // Si l'objet existe, la caméra le regarde
-    console.log('La caméra regarde l\'objet nommé "target".');
-  } else {
-    camera.lookAt(0, 10, 0); // Sinon, la caméra regarde vers le centre (0, 0, 0)
-    console.log('La caméra regarde le point (0, 0, 0).');
-  }
-});
-
+// Ajouter le playerObject à la scène
+scene.add(playerObject.mesh);
 
 // Animation
 function animate() {
@@ -62,3 +68,5 @@ window.addEventListener('resize', () => {
   cameraManager.onResize();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+export { scene, camera, lightManager, sceneManager };

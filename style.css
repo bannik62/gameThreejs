@@ -11,6 +11,7 @@ body {
 
 /* Conteneur principal */
 .gameboy {
+  position: relative;
   width: 300px;
   height: 500px;
   background: #eee;
@@ -47,8 +48,8 @@ body {
 
 /* Croix directionnelle (D-Pad) */
 .dpad {
-  left: 210px;
-  top: 320px;
+  left: 10px;
+  top: 294px;
   position: absolute;
   display: grid;
   grid-template-areas:
@@ -83,6 +84,7 @@ body {
 }
 
 .btn-a, .btn-b {
+  transform: rotate(30deg); /* rotation de 30 degrés */
   width: 60px;
   height: 60px;
   background: red;
@@ -100,23 +102,24 @@ body {
   gap: 20px;
 }
 .buttons {
-  right: 230px;
+  transform: rotate(-30deg); /* rotation de 30 degrés */
+  right: 0px;
   flex-direction: row;
-  top: 440px;
+  top: 355px;
   position: absolute;
   display: flex;
   justify-content: space-between;
   gap: 20px;
 }
 
-.btn-select, .btn-start {
+.btn-select, .btn-start ,.btn-grid, .btn-light, .btn-look-at  {
   width: 80px;
   height: 30px;
   background: #666;
   border: none;
   border-radius: 5px;
   color: white;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   cursor: pointer;
 }
 
@@ -125,4 +128,16 @@ body {
   width: 100%; /* Remplit la largeur de l'écran */
   height: 100%; /* Remplit la hauteur de l'écran */
   display: block; /* Supprime les espaces indésirables */
+}
+
+.settingScene{
+  height: auto;
+  width: auto;
+  padding: 30px;
+  position: relative;
+  background-color: #eee;
+  right: 3%;
+  border: 10px solid  #555 ;
+  border-radius: 10%;
+
 }

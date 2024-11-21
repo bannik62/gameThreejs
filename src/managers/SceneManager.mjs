@@ -4,11 +4,11 @@ export class SceneManager {
   constructor(backgroundColor = 0x333333) {
     // Créer la scène principale
     this.scene = new THREE.Scene();
-
     // Définir la couleur initiale du fond
     this.scene.background = new THREE.Color(backgroundColor);
-
     // Ajouter des helpers visuels
+    this.gridHelper = null; // Pour stocker la grille
+
   }
 
   // Méthode pour configurer une rotation initiale
@@ -17,17 +17,41 @@ export class SceneManager {
     console.log(`Rotation définie : x=${x}, y=${y}, z=${z}`);
   }
 
-  // Méthode pour ajouter des helpers visuels
-  addHelpers() {
-    const gridHelper = new THREE.GridHelper(10, 10);
-    this.scene.add(gridHelper);
 
-    const axesHelper = new THREE.AxesHelper(5);
+  
+  // Méthode pour ajouter des helpers visuels
+  addHelpers(gridSize = 10, gridDivisions = 10, gridColors = { color1: 0xffffff, color2: 0x444444 }, axesSize = 5, gridPosition = { x: 0, y: 1.2, z: 0 }) {
+    const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, gridColors.color1, gridColors.color2);
+    gridHelper.position.set(gridPosition.x, gridPosition.y, gridPosition.z);
+    this.scene.add(gridHelper);
+    this.gridHelper = gridHelper;
+
+    const axesHelper = new THREE.AxesHelper(axesSize);
     this.scene.add(axesHelper);
+    console.log('Grille et axes ajoutés.');
   }
 
-  // Méthode pour changer dynamiquement le fond de la scène
+  toggleGrid() {
+    console.log('this.gridHelper au moment de toggleGrid :', this.gridHelper);
+    if (this.gridHelper) {
+      if (this.scene.children.includes(this.gridHelper)) {
+        this.scene.remove(this.gridHelper);
+        console.log('Grille désactivée.');
+      } else {
+        this.scene.add(this.gridHelper);
+        console.log('Grille activée.');
+      }
+    } else {
+      console.warn('Aucune grille n\'a été initialisée. Utilisez addHelpers() d\'abord.');
+    }
+  }
 
+  // Méthode pour récupérer la scène
+  getScene() {
+    return this.scene;
+  }
+
+  // Méthode pour charger une texture en tant que map de la scène
 
   addMap(width, height, texturePath) {
     const textureLoader = new THREE.TextureLoader();
@@ -60,8 +84,7 @@ export class SceneManager {
 
     console.log(`Carte ajoutée avec taille ${width}x${height}.`);
   }
-
-  // Méthode pour charger une texture en tant que map de la scène
+  // Méthode pour changer dynamiquement le fond de la scène
   setSky(texturePath) {
     const loader = new THREE.TextureLoader();
 
