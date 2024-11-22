@@ -24,7 +24,7 @@ lookAtButton.addEventListener('click', () => {
     camera.lookAt(targetObject.position); // Si l'objet existe, la caméra le regarde
     console.log('La caméra regarde l\'objet nommé "target".');
   } else {
-    camera.lookAt(0, 0, 0); // Sinon, la caméra regarde vers le centre (x: number, y: number, z: number)
+    camera.lookAt(-20, -10, -10); // Sinon, la caméra regarde vers le centre (x: number, y: number, z: number)
     console.log('La caméra regarde le point (0, 0, 0).');
   }
 });
