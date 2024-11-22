@@ -8,9 +8,12 @@ import { LightManager } from './src/managers/LightManager.mjs';
 // Création de la scène
 const sceneManager = new SceneManager();
 const scene = sceneManager.getScene();
-sceneManager.addMap(50, 50, "./src/assets/textures/map.jpg");
+sceneManager.addMap(150, 100, "./src/assets/textures/map.jpg");
+sceneManager.setRotation(Math.PI / 5, 0, 0);
+sceneManager.setSky("./src/assets/textures/ciel.jpg") // Laisser à configurer plus tard
+sceneManager.setBackground("blue");
 sceneManager.addHelpers(
-  50, // Taille de la grille
+  100, // Taille de la grille
  10, // Nombre de divisions
   { color1: 0xff0000, color2: 0x00ff00 }, // Couleurs : rouge et vert
   10, // Taille des axes
@@ -18,10 +21,6 @@ sceneManager.addHelpers(
 );
 // Vérification après ajout
 console.log('Grille initialisée :', sceneManager.gridHelper);
-sceneManager.setRotation(Math.PI / 4, 0, 0);
-sceneManager.setSky("./src/assets/textures/ciel.jpg") // Laisser à configurer plus tard
-sceneManager.setBackground("blue");
-
 // Initialisation des lumières (sans les activer immédiatement)
 const lightManager = new LightManager(scene);
 //actvation quand même 
@@ -30,44 +29,31 @@ lightManager.addHemisphereLight()
 
 // Initialisation de la caméra
 const cameraManager = new CameraManager({
-  position: { x: 0, y: 0, z: 50 },
-  fov: 150,
+  position: { x: 0, y: 10, z: 60 },
+  fov: 130,
 });
 const camera = cameraManager.getCamera();
 
 // Récupérer le canvas
-const canvas = document.getElementById('gameCanvas');
+const canvas = document.querySelector("#gameCanvas"); // Sélectionne le canevas
 
-// Initialisation du renderer
-const renderer = new THREE.WebGLRenderer({ canvas: canvas });
-renderer.setSize(window.innerWidth, window.innerHeight);
+// Initialise le WebGLRenderer avec le canevas
+const renderer = new THREE.WebGLRenderer({ canvas });
 
-// \\initialisation objet player 
-// let playerObject = new PlayerObject({
-//   name: "Héros",
-//   health: 100,
-//   rangeAttack: 15,
-//   rangeMove: 5,
-//   powerAttack: 20,
-//   speed: 10,
-//   spritePath: "./src/entities/characterPlayer/black_Sprite/idle/idle.gif", // Exemple de sprite
-//   position: { x: 0, y: 0, z: 0 },
-// });
+// Définit les dimensions du renderer à celles du canevas
+renderer.setSize(275, 250); // Correspond à width="275" et height="250"
 
-// Ajouter le playerObject à la scène
-// scene.add(playerObject.mesh);
-
-// Animation
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-}
-animate();
+// Ajuste le pixel ratio pour la qualité d'affichage
+renderer.setPixelRatio(window.devicePixelRatio); // Pour les écrans HDPI ou Retina
 
 // Gestion du redimensionnement
 window.addEventListener('resize', () => {
   cameraManager.onResize();
   renderer.setSize(window.innerWidth, window.innerHeight);
-});
+});function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera, canvas.clientHeight);
+}
+animate();
 // exporte des objet
-export { scene, camera, lightManager, sceneManager};
+export { scene, camera, lightManager, sceneManager,cameraManager};

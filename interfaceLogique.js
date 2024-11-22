@@ -4,7 +4,7 @@ import { CameraManager } from './src/managers/CameraManager.mjs';
 import { SceneManager } from './src/managers/SceneManager.mjs';
 import { LightManager } from './src/managers/LightManager.mjs';
 import { PlayerObject } from './src/managers/objectsmanager/PlayerObject.mjs';
-import { scene, camera, lightManager, sceneManager } from './managerScript.js';
+import { scene, camera, lightManager, sceneManager, cameraManager } from './managerScript.js';
 document.addEventListener('DOMContentLoaded', () => {
 // const sceneManager = new SceneManager();
 // const scene = sceneManager.getScene();
@@ -16,18 +16,35 @@ lightButton.addEventListener('click', () => {
   lightManager.toggleLight(); // Active ou désactive les lumières
 });
 
-// Gestionnaire pour le bouton Select
+ // Par défaut, la caméra est sur la vue définie par CameraManager
+
 const lookAtButton = document.querySelector('.btn-look-at');
+// Variables pour gérer le toggle
+let isDefaultView = true; // Par défaut, la caméra est sur la vue définie par CameraManager
 lookAtButton.addEventListener('click', () => {
-  const targetObject = scene.getObjectByName('target'); // Rechercher un objet nommé "target"
-  if (targetObject) {
-    camera.lookAt(targetObject.position); // Si l'objet existe, la caméra le regarde
-    console.log('La caméra regarde l\'objet nommé "target".');
+  if (isDefaultView) {
+    // Aller vers une case spécifique
+    const cellId = 'B1'; // La case à regarder
+    const cellPosition = sceneManager.getCellPosition(cellId); // Obtenir les coordonnées de la cellule
+
+    if (cellPosition) {
+      // Utilise CameraManager pour orienter la caméra vers la cellule
+      cameraManager.lookAt(cellPosition.x, 0, cellPosition.z);
+      console.log(`La caméra regarde la cellule ${cellId} à la position :`, cellPosition);
+    } else {
+      console.warn(`Cellule ${cellId} introuvable.`);
+    }
   } else {
-    camera.lookAt(-20, -10, -10); // Sinon, la caméra regarde vers le centre (x: number, y: number, z: number)
-    console.log('La caméra regarde le point (0, 0, 0).');
+    // Revenir à la vue par défaut définie par CameraManager
+    cameraManager.setPosition(0, 5, 10); // Position par défaut (adaptée au constructeur de CameraManager)
+    cameraManager.lookAt(0, 0, 0); // Regarder le centre par défaut
+    console.log('La caméra est revenue à la vue par défaut.');
   }
+
+  // Inverser l'état du toggle
+  isDefaultView = !isDefaultView;
 });
+
 
 // Gestionnaire pour le bouton Grid Setup
 const gridButton = document.querySelector('.btn-grid');

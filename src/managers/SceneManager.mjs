@@ -155,7 +155,6 @@ export class SceneManager {
     };
   }
   
-
   // Ajoute un sprite à une cellule spécifique
   addSpriteToGrid(spritePath, cellId) {
     const cellPosition = this.getCellPosition(cellId);

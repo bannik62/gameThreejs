@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export class CameraManager {
   constructor({
-    fov = 75, // Champ de vision
+    fov = 135, // Champ de vision
     aspect = window.innerWidth / window.innerHeight, // Ratio largeur/hauteur
     near = 0.1, // Plan proche
     far = 1000, // Plan lointain
