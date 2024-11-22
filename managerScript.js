@@ -14,7 +14,7 @@ sceneManager.setSky("./src/assets/textures/ciel.jpg") // Laisser à configurer p
 sceneManager.setBackground("blue");
 sceneManager.addHelpers(
   100, // Taille de la grille
- 10, // Nombre de divisions
+ 26, // Nombre de divisions
   { color1: 0xff0000, color2: 0x00ff00 }, // Couleurs : rouge et vert
   10, // Taille des axes
   { x: 0, y: 0.9, z: 0 } // Position de la grille
@@ -24,8 +24,8 @@ console.log('Grille initialisée :', sceneManager.gridHelper);
 // Initialisation des lumières (sans les activer immédiatement)
 const lightManager = new LightManager(scene);
 //actvation quand même 
-lightManager.addDirectionalLight(0xffffff, 1, { x: 10, y: 15, z: 5 });
-lightManager.addHemisphereLight()
+// lightManager.addDirectionalLight(0xffffff, 1, { x: 10, y: 15, z: 5 });
+// lightManager.addHemisphereLight()
 
 // Initialisation de la caméra
 const cameraManager = new CameraManager({

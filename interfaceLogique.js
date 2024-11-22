@@ -24,7 +24,7 @@ let isDefaultView = true; // Par défaut, la caméra est sur la vue définie par
 lookAtButton.addEventListener('click', () => {
   if (isDefaultView) {
     // Aller vers une case spécifique
-    const cellId = 'B1'; // La case à regarder
+    const cellId = 'Z1'; // La case à regarder
     const cellPosition = sceneManager.getCellPosition(cellId); // Obtenir les coordonnées de la cellule
 
     if (cellPosition) {
@@ -36,8 +36,7 @@ lookAtButton.addEventListener('click', () => {
     }
   } else {
     // Revenir à la vue par défaut définie par CameraManager
-    cameraManager.setPosition(0, 5, 10); // Position par défaut (adaptée au constructeur de CameraManager)
-    cameraManager.lookAt(0, 0, 0); // Regarder le centre par défaut
+    cameraManager.lookAt(0, 10, 60); // Regarder le centre par défaut
     console.log('La caméra est revenue à la vue par défaut.');
   }
 
