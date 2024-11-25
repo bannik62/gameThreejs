@@ -52,6 +52,12 @@ export class PlayerObject {
 
   // Méthode pour créer un sprite avec un filtre CSS
   createSpriteWithFilter() {
+    const existingSprite = document.getElementById(`${this.name}-sprite`);
+    if (existingSprite) {
+      console.warn(`Un sprite pour ${this.name} existe déjà.`);
+      return;
+    }
+
     const spriteContainer = document.createElement('div');
     spriteContainer.style.position = 'absolute';
     spriteContainer.style.width = '50px';

@@ -10,6 +10,8 @@ export class SceneManager {
     this.scene.background = new THREE.Color(backgroundColor);
     // Ajouter des helpers visuels
     this.gridHelper = null; // Pour stocker la grille
+    this.players = []; // Initialisation de la liste des joueurs
+
   }
 
   // Méthode pour configurer une rotation initiale
@@ -125,85 +127,87 @@ export class SceneManager {
 
   // Retourne la position centrale d'une cellule sur la grille
   getCellPosition(cellId) {
+    
     if (!this.gridHelper) {
-      console.error("Grille non initialisée.");
+      console.error('Grille non initialisée.');
       return null;
     }
-  
-    // Utiliser les dimensions enregistrées
-    const cellSize = this.gridSize / this.gridDivisions; // Taille d'une cellule
-  
-    // Identifier la colonne et la ligne
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const column = letters.indexOf(cellId[0]); // Exemple : 'A' → 0, 'B' → 1
-    const row = parseInt(cellId.slice(1)) - 1; // Exemple : '1' → 0, '2' → 1
-  
-    if (
-      column === -1 ||
-      isNaN(row) ||
-      column >= this.gridDivisions ||
-      row >= this.gridDivisions
-    ) {
+
+    const cellSize = this.gridSize / this.gridDivisions;
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const column = letters.indexOf(cellId[0]);
+    const row = parseInt(cellId.slice(1)) - 1;
+
+    if (column === -1 || isNaN(row) || column >= this.gridDivisions || row >= this.gridDivisions) {
       console.error(`Cellule ${cellId} invalide.`);
       return null;
     }
-  
-    // Calculer la position au centre de la cellule
+
     return {
       x: column * cellSize - this.gridSize / 2 + cellSize / 2,
       z: row * cellSize - this.gridSize / 2 + cellSize / 2,
     };
   }
-  
-  // Ajoute un sprite à une cellule spécifique
-  addSpriteToGrid(spritePath, cellId) {
-    const cellPosition = this.getCellPosition(cellId);
-    if (!cellPosition) return;
-  
-    const spriteContainer = document.createElement("div");
-    spriteContainer.className = "sprite";
-    spriteContainer.style.position = "absolute";
-    spriteContainer.style.width = "50px"; // Taille fixe ou dynamique
-    spriteContainer.style.height = "50px"; // Taille fixe ou dynamique
-    spriteContainer.style.backgroundImage = `url(${spritePath})`;
-    spriteContainer.style.backgroundSize = "contain";
-    spriteContainer.style.backgroundRepeat = "no-repeat";
-    spriteContainer.style.left = `${cellPosition.x + window.innerWidth / 2}px`;
-    spriteContainer.style.top = `${-cellPosition.z + window.innerHeight / 2}px`;
-    spriteContainer.style.transform = "translate(-50%, -50%)";
-  
-    document.body.appendChild(spriteContainer);
-    console.log(`Sprite ajouté sur la cellule ${cellId}`);
-  }
 
+  // Méthode pour créer un joueur sur la grille
   createPlayerOnGrid(playerOptions, cellId) {
-    // Obtenir la position centrale de la cellule
     const cellPosition = this.getCellPosition(cellId);
     if (!cellPosition) {
       console.error(`Cellule ${cellId} introuvable. Joueur non ajouté.`);
       return null;
     }
   
-    // Mettre à jour la position du joueur avec celle de la cellule
-    playerOptions.position = {
-      x: cellPosition.x,
-      y: 0, // Toujours au niveau du sol
-      z: cellPosition.z,
-    };
-  
-    // Créer le joueur
-    const playerObject = new PlayerObject(playerOptions);
-  
-    // Ajouter le joueur à la scène
-    this.addPlayerToScene(playerObject);
-  
-    // Ajouter un sprite sur la cellule
-    if (playerObject.spritePath) {
-      this.addSpriteToGrid(playerObject.spritePath, cellId);
+    // Vérifie si un joueur existe déjà dans cette cellule
+    const existingPlayer = this.players.find((player) => player.cellId === cellId);
+    if (existingPlayer) {
+      console.warn(`Un joueur existe déjà sur la cellule ${cellId}.`);
+      return null;
     }
   
-    return playerObject; // Retourne le joueur créé pour référence
+    // Crée le joueur
+    const playerObject = new PlayerObject({
+      ...playerOptions,
+      position: { x: cellPosition.x, y: 0, z: cellPosition.z },
+    });
+  
+    // Ajoute le joueur à la scène
+    this.scene.add(playerObject.mesh);
+  
+    // Ajoute le joueur à la liste des joueurs
+    this.players.push({ playerObject, cellId });
+  
+    console.log(`Joueur ${playerObject.name} ajouté à la cellule ${cellId}.`);
+  
+    return playerObject; // Retourne le joueur pour référence
   }
+  
+
+  // Méthode pour ajouter un sprite HTML
+  // addSpriteToGrid(spritePath, cellId) {
+  //   const existingSprite = document.querySelector(`.sprite[data-cell="${cellId}"]`);
+  //   if (existingSprite) {
+  //     console.warn(`Un sprite existe déjà sur la cellule ${cellId}.`);
+  //     return;
+  //   }
+
+  //   const cellPosition = this.getCellPosition(cellId);
+  //   if (!cellPosition) return;
+
+  //   const spriteContainer = document.createElement('div');
+  //   spriteContainer.className = 'sprite';
+  //   spriteContainer.setAttribute('data-cell', cellId);
+  //   spriteContainer.style.position = 'absolute';
+  //   spriteContainer.style.width = '50px';
+  //   spriteContainer.style.height = '50px';
+  //   spriteContainer.style.backgroundImage = `url(${spritePath})`;
+  //   spriteContainer.style.backgroundSize = 'contain';
+  //   spriteContainer.style.backgroundRepeat = 'no-repeat';
+  //   spriteContainer.style.transform = 'translate(-50%, -50%)';
+
+  //   document.body.appendChild(spriteContainer);
+  //   console.log(`Sprite ajouté sur la cellule ${cellId}.`);
+  // }
+
   
   
 

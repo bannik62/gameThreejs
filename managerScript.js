@@ -8,6 +8,8 @@ import { LightManager } from './src/managers/LightManager.mjs';
 // Création de la scène
 const sceneManager = new SceneManager();
 const scene = sceneManager.getScene();
+
+//modification de la scéne 
 sceneManager.addMap(150, 100, "./src/assets/textures/map.jpg");
 sceneManager.setRotation(Math.PI / 5, 0, 0);
 sceneManager.setSky("./src/assets/textures/ciel.jpg") // Laisser à configurer plus tard

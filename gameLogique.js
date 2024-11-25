@@ -7,8 +7,8 @@ console.log("data importer de la bdd : ", classes);
 
 
 
-// Variable pour stocker la classe sélectionnée
-let currentClass = classes[0]; // Classe par défaut : Maître Snake
+// Variable pour stocker la classe sélectionnée // Classe par défaut : Maître Snake
+let currentClass = classes[0]; 
 
 // Bouton Select pour ouvrir la popup
 const selectButton = document.querySelector(".btn-select");
@@ -55,32 +55,44 @@ document.getElementById("closePopup").addEventListener("click", () => {
 });
 
 // Bouton Start
-const startButton = document.querySelector(".btn-start");
-startButton.addEventListener("click", () => {
-    const selectedClass = classes.find(cls => cls.role_name === currentClass.role_name);
-  
-    if (!selectedClass) {
-      console.error("Erreur : La classe sélectionnée n'existe pas.");
-      return;
-    }
-  
-    const spawnCell = "A1"; // Exemple de cellule de départ
-    const playerOptions = {
-      name: selectedClass.role_name,
-      health: selectedClass.health,
-      rangeAttack: selectedClass.attackRange,
-      rangeMove: selectedClass.moveRange,
-      powerAttack: selectedClass.attackPower,
-      speed: selectedClass.speed,
-      spritePath: './src/entities/characterPlayer/black_Sprite/idle/idle.gif',
-    };
-  
-    // Utilise la nouvelle méthode pour ajouter le joueur
-    const playerObject = sceneManager.createPlayerOnGrid(playerOptions, spawnCell);
-  
-    if (playerObject) {
-      console.log(`${playerObject.name} spawn sur ${spawnCell}`);
-    }
-  });
-  
+let isCreatingPlayer = false;
+
+const startButton = document.querySelector('.btn-start');
+startButton.addEventListener('click', () => {
+  if (isCreatingPlayer) {
+    console.warn('Un joueur est déjà en cours de création.');
+    return;
+  }
+
+  isCreatingPlayer = true;
+
+  const selectedClass = classes.find((cls) => cls.role_name === currentClass.role_name);
+
+  if (!selectedClass) {
+    console.error('Erreur : La classe sélectionnée n\'existe pas.');
+    isCreatingPlayer = false; // Réinitialise le verrou en cas d’erreur
+    return;
+  }
+
+  const spawnCell = 'Z10'; // Cellule cible
+  const playerOptions = {
+    name: selectedClass.role_name,
+    health: selectedClass.health,
+    rangeAttack: selectedClass.attackRange,
+    rangeMove: selectedClass.moveRange,
+    powerAttack: selectedClass.attackPower,
+    speed: selectedClass.speed,
+    spritePath: './src/entities/characterPlayer/black_Sprite/idle/idle.gif',
+    spriteHue:150
+  };
+
+  const playerObject = sceneManager.createPlayerOnGrid(playerOptions, spawnCell);
+
+  if (playerObject) {
+    console.log(`${playerObject.name} spawn sur ${spawnCell}`);
+  }
+
+  isCreatingPlayer = false; // Libère le verrou une fois terminé
+});
+
   
